@@ -7,11 +7,14 @@ let httpListener;
 
 app.all('*', function(req, res) {
   if (httpListener) {
-    listener(req, res);
+    httpListener(req, res);
   }
 })
 
-app.listen();
+const port = 3001;
+
+console.log("firebase-functions-mock listening on port 3001")
+app.listen(3001);
 
 module.exports = function(admin, config) {
   return {
