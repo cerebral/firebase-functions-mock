@@ -15,8 +15,18 @@ app.listen();
 
 module.exports = function(admin, config) {
   return {
-    config: (() => config || {}),
+    auth: {
+      user() {
+        console.warn('WARNING: firebase-functions-mock does not support auth events')
+        
+        return {
+          onCreate(){}
+        }
+      }
     },
+
+    config: (() => config || {}),
+
     database: {
       ref: function(path) {
         return {
