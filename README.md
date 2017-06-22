@@ -7,8 +7,10 @@ Work locally with firebase functions
 
 ## Supports
 
-- **onReq** express app handling
+- **onRequest** express app handling
 - **onWrite** database event handling
+- Mocks out auth and config
+- Runs static delivery of your public files folder
 
 ## How to use
 *functions/index.js*
@@ -21,9 +23,13 @@ const admin = firebase.initializeApp({
 let functions = require('firebase-functions');
 
 // When in debug mode, override functions with the mock and
-// pass in the instance of "admin"
+// pass in the instance of "admin" and optional options
 if (process.env.NODE_ENV !== 'production') {
-  functions = require('firebase-functions-mock')(admin, process.env.FIREBASE_CONFIG);
+  functions = require('firebase-functions-mock')(admin, {
+    config: process.env.FIREBASE_CONFIG,
+    port: 3001,
+    publicPath: 'public'
+  });
 }
 
 exports.app = functions.https.onRequest(require('./app'));
@@ -31,11 +37,9 @@ exports.publish = functions.database.ref('articles/{uid}/{articleName}').onWrite
 ```
 
 ## Limitations
-This project is in its initial state to build the [jsblog.io](https://www.jsblog.io) project. It has a lot of potential for improvements.
+This project is in its initial state to build the [jsblog.io](https://www.jsblog.io) project. It has a lot of potential for improvements. Although contributions are already made, here are some things to look into:
 
-- Do not hardcode to express app port 3000
 - Test more scenarios with **onWrite** usage
-- Other functions APIs?
 
 ## Get going
 To get going with Firebase Functions I highly recommend using [this boilerplate](https://github.com/cerebral/firebase-functions-boilerplate) which has the whole workflow set up for you.
