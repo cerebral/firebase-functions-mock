@@ -1,15 +1,20 @@
 const express = require('express');
 const onWrite = require('./onWrite');
 
+const app = express();
+
+let httpListener;
+
+app.all('*', function(req, res) {
+  if (httpListener) {
+    listener(req, res);
+  }
+})
+
+app.listen();
+
 module.exports = function(admin, config) {
   return {
-    https: {
-      onRequest: function(app) {
-        app.use(express.static('public'));
-        app.listen(3001, function() {
-          console.log('Running server on port 3001');
-        });
-      },
     config: (() => config || {}),
     },
     database: {
@@ -21,5 +26,11 @@ module.exports = function(admin, config) {
         };
       },
     },
+
+    https: {
+      onRequest: function(cb) {
+        httpListener = cb;
+      }
+    }
   };
 };
