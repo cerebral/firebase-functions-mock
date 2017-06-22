@@ -23,7 +23,7 @@ let functions = require('firebase-functions');
 // When in debug mode, override functions with the mock and
 // pass in the instance of "admin"
 if (process.env.NODE_ENV !== 'production') {
-  functions = require('firebase-functions-mock')(admin);
+  functions = require('firebase-functions-mock')(admin, process.env.FIREBASE_CONFIG);
 }
 
 exports.app = functions.https.onRequest(require('./app'));

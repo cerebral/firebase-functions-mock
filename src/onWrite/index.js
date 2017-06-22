@@ -143,6 +143,7 @@ function createEvent(ref, pathDescription, pathIndex, cb) {
 function onWrite(path, cb, admin) {
   var pathDescription = path
     .split('/')
+    .filter(str => str !== '')
     .reduce(function(currentPathDescription, pathKey) {
       var paramMatch = pathKey.match(/\{(.*)\}/);
       var isParam = Boolean(paramMatch);

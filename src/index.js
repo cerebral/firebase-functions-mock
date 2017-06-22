@@ -1,16 +1,35 @@
 const express = require('express');
 const onWrite = require('./onWrite');
 
-module.exports = function(admin) {
+const app = express();
+
+let httpListener;
+
+app.all('*', function(req, res) {
+  if (httpListener) {
+    httpListener(req, res);
+  }
+})
+
+const port = 3001;
+
+console.log("firebase-functions-mock listening on port 3001")
+app.listen(3001);
+
+module.exports = function(admin, config) {
   return {
-    https: {
-      onRequest: function(app) {
-        app.use(express.static('public'));
-        app.listen(3001, function() {
-          console.log('Running server on port 3001');
-        });
-      },
+    auth: {
+      user() {
+        console.warn('WARNING: firebase-functions-mock does not support auth events')
+        
+        return {
+          onCreate(){}
+        }
+      }
     },
+
+    config: (() => config || {}),
+
     database: {
       ref: function(path) {
         return {
@@ -20,5 +39,11 @@ module.exports = function(admin) {
         };
       },
     },
+
+    https: {
+      onRequest: function(cb) {
+        httpListener = cb;
+      }
+    }
   };
 };
