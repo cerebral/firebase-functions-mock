@@ -1,7 +1,7 @@
 const express = require('express');
 const onWrite = require('./onWrite');
 
-module.exports = function(admin) {
+module.exports = function(admin, config) {
   return {
     https: {
       onRequest: function(app) {
@@ -10,6 +10,7 @@ module.exports = function(admin) {
           console.log('Running server on port 3001');
         });
       },
+    config: (() => config || {}),
     },
     database: {
       ref: function(path) {
